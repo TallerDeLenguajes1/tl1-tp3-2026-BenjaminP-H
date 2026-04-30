@@ -6,11 +6,15 @@
 
 void MostrarPersonas(char *nombres[TAM]);
 
+void BuscarPersona(char *nombres[TAM], int ID);
+
 int main()
 {
     char *nombres[TAM]; //arreglo tipo puntero
 
     char Buff[50];// sirve para almacenar cadenas de caracteres
+
+    int ID;
 
     printf("--- Ingrese 5 Nombres ---\n");
 
@@ -27,6 +31,9 @@ int main()
     }
     
     MostrarPersonas(nombres);
+    printf("Ingrese el id de la persona a buscar: \n");
+    scanf("%d", &ID);
+    BuscarPersona(nombres, ID);
 
     return 0;
 }
@@ -38,4 +45,14 @@ void MostrarPersonas(char *nombres[TAM]){
         // %s sigue la dirección del puntero e imprime la cadena hasta el \0
         printf("ID %d: %s\n", i, nombres[i]);
     }
+}
+
+void BuscarPersona(char *nombres[TAM], int ID){
+    if (ID >= 0 && ID < TAM)
+    {
+        printf("LA PERSONA CON ID [%d] ES: %s\n",ID, nombres[ID]);
+    }else{
+        printf("no se encontro la persona\n");
+    }
+    
 }
