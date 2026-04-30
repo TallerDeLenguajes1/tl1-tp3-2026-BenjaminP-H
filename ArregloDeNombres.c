@@ -5,6 +5,7 @@
 #define TAM 5
 
 void MostrarPersonas(char *nombres[TAM]);
+int BuscarNombre(char *nombres[TAM], char *nombreBuscado);
 
 int main()
 {
@@ -28,6 +29,11 @@ int main()
     
     MostrarPersonas(nombres);
 
+    char nombreBuscado[50];
+    printf("\nIngrese el nombre a buscar: ");
+    gets(nombreBuscado);
+    BuscarNombre(nombres, nombreBuscado);
+
     return 0;
 }
 
@@ -38,4 +44,17 @@ void MostrarPersonas(char *nombres[TAM]){
         // %s sigue la dirección del puntero e imprime la cadena hasta el \0
         printf("ID %d: %s\n", i, nombres[i]);
     }
+}
+
+int BuscarNombre(char *nombres[TAM], char *nombreBuscado){
+    for (int i = 0; i < TAM; i++)
+    {
+        if (strstr(nombres[i], nombreBuscado) != NULL) // Esta función busca una "subcadena" (la palabra clave) dentro de una cadena más grande (el nombre guardado en mi vector)
+        {
+            printf("\nEl nombre %s se encuentra en la posicion %d", nombreBuscado, i);
+            return i;
+        }
+    }
+    printf("\nEl nombre %s no se encuentra en la lista", nombreBuscado);
+    return -1;
 }
