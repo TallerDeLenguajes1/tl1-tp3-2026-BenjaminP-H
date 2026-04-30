@@ -4,57 +4,85 @@
 
 #define TAM 5
 
+// --- PROTOTIPOS ---
 void MostrarPersonas(char *nombres[TAM]);
-int BuscarNombre(char *nombres[TAM], char *nombreBuscado);
+void BuscaNombrePorId(char *nombres[TAM], int ID);
+int BuscaNombrePorPalabra(char *nombres[TAM], char *palabraClave);
 
-int main()
-{
-    char *nombres[TAM]; //arreglo tipo puntero
-
-    char Buff[50];// sirve para almacenar cadenas de caracteres
+int main() {
+    char *nombres[TAM]; 
+    char Buff[100]; 
 
     printf("--- Ingrese 5 Nombres ---\n");
+    for (int i = 0; i < TAM; i++) {
+        printf("Nombre [%d]: ", i);
+        fflush(stdin);
+        gets(Buff); 
 
-    for (size_t i = 0; i < TAM; i++)
-    {
-        printf("Nombre [%i]: ", i);
-        gets(Buff);// mejor que scanf para leer cadenas de caracteres
-
-        // --- RESERVA DINÁMICA (EL HEAP) ---
-
-        int longitud = strlen(Buff) + 1; // +1 para el \0
-        nombres[i] = (char *) malloc(longitud * sizeof(char));//reserve memoria para la cadena
-        strcpy(nombres[i], Buff);// escribe la cadena en la memoria reservada en este caso en el arreglo nombres
+        int longitud = strlen(Buff) + 1;
+        nombres[i] = (char *) malloc(longitud * sizeof(char));
+        strcpy(nombres[i], Buff);
     }
     
     MostrarPersonas(nombres);
 
-    char nombreBuscado[50];
-    printf("\nIngrese el nombre a buscar: ");
-    gets(nombreBuscado);
-    BuscarNombre(nombres, nombreBuscado);
+    // --- PARTE 3: INTERFAZ DE USUARIO ---
+    int opcion;
+    printf("\n--- MENU DE BUSQUEDA ---\n");
+    printf("1. Buscar por ID (Posicion)\n");
+    printf("2. Buscar por Palabra Clave\n");
+    printf("Seleccione una opcion: ");
+    scanf("%d", &opcion);
+    getchar(); // Limpia el buffer
+
+    if (opcion == 1) {
+        int id_buscado;
+        printf("Ingrese el ID (0-4): ");
+        scanf("%d", &id_buscado);
+        BuscaNombrePorId(nombres, id_buscado);
+    } 
+    else if (opcion == 2) {
+        char clave[50];
+        printf("Ingrese la palabra clave: ");
+        gets(clave);
+        int res = BuscaNombrePorPalabra(nombres, clave);
+        if (res != -1) {
+            printf("Coincidencia encontrada en ID [%d]: %s\n", res, nombres[res]);
+        } else {
+            printf("-1 (No se encontraron coincidencias)\n");
+        }
+    }
+
+    // Liberar memoria
+    for (int i = 0; i < TAM; i++) {
+        free(nombres[i]);
+    }
 
     return 0;
 }
 
-void MostrarPersonas(char *nombres[TAM]){
+// --- IMPLEMENTACIONES ---
+
+void MostrarPersonas(char *nombres[TAM]) {
     printf("\n--- Listado de Personas ---\n");
-    for (int i = 0; i < TAM; i++)
-    {
-        // %s sigue la dirección del puntero e imprime la cadena hasta el \0
+    for (int i = 0; i < TAM; i++) {
         printf("ID %d: %s\n", i, nombres[i]);
     }
 }
 
-int BuscarNombre(char *nombres[TAM], char *nombreBuscado){
-    for (int i = 0; i < TAM; i++)
-    {
-        if (strstr(nombres[i], nombreBuscado) != NULL) // Esta función busca una "subcadena" (la palabra clave) dentro de una cadena más grande (el nombre guardado en mi vector)
-        {
-            printf("\nEl nombre %s se encuentra en la posicion %d", nombreBuscado, i);
-            return i;
+void BuscaNombrePorId(char *nombres[TAM], int ID) {
+    if (ID >= 0 && ID < TAM) {
+        printf("LA PERSONA CON ID [%d] ES: %s\n", ID, nombres[ID]);
+    } else {
+        printf("no se encontro la persona\n");
+    }
+}
+
+int BuscaNombrePorPalabra(char *nombres[TAM], char *palabraClave) {
+    for (int i = 0; i < TAM; i++) {
+        if (strstr(nombres[i], palabraClave) != NULL) {
+            return i; 
         }
     }
-    printf("\nEl nombre %s no se encuentra en la lista", nombreBuscado);
-    return -1;
+    return -1; 
 }
